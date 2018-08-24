@@ -1,0 +1,274 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-info">
+    <!--      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button> -->
+          <%= t('general.info') %>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <%= form_with url: submit_path do |form| %>
+            <%= form.label :scenario, t('general.request') %><br>
+            <%= form.select :scenario, @donations, {}, { class: "selectpicker" } %><br>
+
+            <%= form.label :data, t('general.submission'), style: "margin-top: 15px;" %> 
+                (<%= form.button t('general.example'), value: "info", role: "link", class: "btn bnt-link", style: "background-color: white; padding: 0; color: #337ab7; margin-top: -3px; box-shadow: none;" %>)<br>
+            <%= form.text_area :json_data, rows: "4", style:"width: 100%; margin-bottom: 15px;", 
+                    value: @submission %><br>
+
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="margin-bottom: 0;">
+              <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingOne">
+                  <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                      <%= t('general.privacy') %>
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                  <div class="panel-body">
+                    <%= t('general.privacy_info') %><br><br>
+                    <!-- <div class="col-md-12">
+                        <%= form.check_box :diffpriv %>
+                        <%= form.label :diffpriv, t('general.diffpriv'), style: "margin-left: 10px;" %>
+                    </div> -->
+                    <div class="col-md-12">
+                        <div class="field">
+                            <%= form.radio_button :privacy, "anonymous", checked: (@email.to_s == ""), style: "margin-right: 10px;" %>
+                            <%= form.label :privacy, t('general.donate_anonymously'), value: "anonymous" %><br>
+                            <%= form.radio_button :privacy, "email", checked: (@email.to_s != ""), style: "margin-right: 10px;" %>
+                            <%= form.label :privacy, t('general.donate_email'), value: "email", style: "margin-right: 10px;" %>
+                            <%= form.email_field :email, style: "width: 250px;", value: @email %>
+                        </div>
+                        <%= form.label :data_signature, t('general.signature'), style: "margin: 10px 0 5px 27px;" %> 
+                          (<a id="sighint" tabindex="0" data-toggle="popover" data-placement="top" data-html="true"
+                                title='Signatur erstellen <span class="close">&times;</span>' 
+                                data-content="<p>Führe folgenden Befehl auf der Befehlszeile aus</p><pre>$ echo '[{&ldquo;your&ldquo;:&ldquo;data&ldquo;}, {...}]' | \
+  tr -d '\040\011\012\015' | \
+  gpg --detach-sig -u your.email@provider.com | \
+  base64</pre>und kopiere die Ausgabe in das Feld unten.">Anleitung</a>)<br>
+                        <%= form.text_area :data_signature, rows: "2", style:"width: 100%; margin-left: 27px;", value: @signature %><br>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingTwo">
+                  <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                      <%= t('general.usage_policy') %>
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                  <div class="panel-body">
+                    <%= t('general.usage_policy_info') %><br>
+                    <p><%= raw t('general.usage_policy_reference') %></p>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-xs-3 col-md-2 control-label" style="margin-top: 14px;"><%= t('general.recipient') %>:</label>
+                            <div class="col-xs-9 col-md-10" style="margin-top: 7px;">
+                                <%= form.collection_select(:recipient,
+                                        { t('usage.recipient.ours')      => "Ours",
+                                          t('usage.recipient.delivery')  => "Delivery",
+                                          t('usage.recipient.same')      => "Same",
+                                          t('usage.recipient.other')     => "OtherRecipient",
+                                          t('usage.recipient.unrelated') => "Unrelated",
+                                          t('usage.recipient.public')    => "Public" }, 
+                                        :last, :first, { selected: @recipient_select }, 
+                                        multiple: true, id: "recipient-selection" ) %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-xs-3 col-md-2 control-label" style="margin-top: 14px;"><%= t('general.purpose') %>:</label>
+                            <div class="col-xs-9 col-md-10" style="margin-top: 7px;">
+                                <%= form.collection_select(:purpose, 
+                                        { t('usage.purpose.current')    => "Current", 
+                                          t('usage.purpose.admin')      => "Admin",
+                                          t('usage.purpose.develop')    => "Develop",
+                                          t('usage.purpose.tailoring')  => "Tailoring",
+                                          t('usage.purpose.contact')    => "AnyContact",
+                                          t('usage.purpose.historical') => "Historical" }, 
+                                        :last, :first, { selected: @purpose_select }, 
+                                        multiple: true, id: "purpose-selection" ) %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group" style="margin-bottom: 0">
+                            <label class="col-xs-3 col-md-2 control-label" style="margin-top: 14px;"><%= t('general.processing') %>:</label>
+                            <!-- <div class="" style="margin-top: 7px; margin-left: 15px; display: inline;"> -->
+                            <div class="col-xs-9 col-md-10" style="margin-top: 7px;">
+                                <%= form.collection_select(:processing, 
+                                        { t('usage.processing.aggregate') => "Aggregate", 
+                                          t('usage.processing.analyze')   => "Analyze" ,
+                                          t('usage.processing.anonymize') => "Anonymize",
+                                          t('usage.processing.collect')   => "Collect",
+                                          t('usage.processing.copy')      => "Copy",
+                                          t('usage.processing.derive')    => "Derive",
+                                          t('usage.processing.move')      => "Move",
+                                          t('usage.processing.query')     => "Query",
+                                          t('usage.processing.transfer')  => "Transfer" }, 
+                                        :last, :first, { selected: @processing_select }, 
+                                        multiple: true, id: "processing-selection" ) %>
+                            </div>
+                            <!-- <div style="white-space: nowrap; display: inline;">
+                                <%= form.check_box :check_participants, style: "margin-left: 15px;" %>
+                                <label class="control-label" style="margin-top: 14px; margin-left: 5px;"><%= t('general.min_participants') %>:</label>
+                                <%= form.number_field :num_participants, class: "form-control",  style: "width: 70px; display: inline; margin-left: 10px;" %>
+                            </div> -->
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group"">
+                            <label class="col-xs-3 col-md-2 control-label" style="margin-top: 14px;"><%= t('general.storage_location') %>:</label>
+                            <div class="col-xs-9 col-md-10" style="margin-top: 7px;">
+                                <%= form.collection_select(:storage_location, 
+                                        { t('usage.location.our_servers')     => "OurServers",
+                                          t('usage.location.third_parties')   => "ThirdParty",
+                                          t('usage.location.eu')              => "EU" ,
+                                          t('usage.location.eu_like')         => "EULike",
+                                          t('usage.location.third_countries') => "ThirdCountries" }, 
+                                        :last, :first, { selected: @storage_location_select }, 
+                                        multiple: true, id: "storage-location-selection" ) %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-xs-3 col-md-2 control-label" style="margin-top: 14px;"><%= t('general.storage_duration') %>:</label>
+                            <div class="col-xs-9 col-md-10" style="margin-top: 7px;">
+                                <%= form.collection_select(:storage_duration, 
+                                        { t('usage.duration.stated_purpose')     => "StatedPurpose", 
+                                          t('usage.duration.legal_requirements')  => "LegalRequirement",
+                                          t('usage.duration.business_practices') => "BusinessPractices", 
+                                          t('usage.duration.indefinitely')       => "Indefinitely" }, 
+                                        :last, :first, { selected: @storage_duration_select }, 
+                                        multiple: false, id: "storage-duration-selection" ) %>
+                            </div>
+                        </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12" style="margin: 15px 0 15px;">
+                    <%= form.check_box :check %>
+                    <%= form.label :check, t('general.show_data') %>
+                </div>
+            </div>
+
+            <% flash.each do |message_type, message| %>
+                <div class="alert alert-<%= message_type %>"><%= message %></div>
+            <% end %>
+
+            <%= form.button value: "donate", class: "btn btn-primary", style:"margin-right: 10px;" do %>
+                <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+                <%= t('general.donate') %>
+            <% end %>
+
+            <%= form.button value: "results", class: "btn btn-success", style:"margin-right: 10px;" do %>
+                <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+                <%= t('general.results') %>
+            <% end %>
+            <%= form.button value: "info", class: "btn btn-default", style:"margin-right: 10px;" do %>
+                <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                <%= t('general.about') %>
+            <% end %>
+            <%= form.button value: "reset", class: "btn btn-default" do %>
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                <%= t('general.reset') %>
+            <% end %>
+
+            <div class="row" id="submit_data" style="display: <%= @donation_uuid.to_s == "" ? "none" : "block" %>"">
+                <div class="col-md-12" style="margin: 35px 0 5px;">
+                    <h3><%= t('general.submit_to_info') %></h3>
+                    <p><%= t('general.url') %>: <%= @donation_url %><br>
+                    <%= t('general.records') %>: <%= @records %></p>
+                    <pre style="height: 410px;"><%= JSON.pretty_generate(JSON.parse(@data)) %></pre>
+                </div>
+            </div>        
+
+            <div class="row" id="submit_data" style="display: <%= @donation_uuid.to_s == "" ? "none" : "block" %>">
+                <div class="col-md-12" style="margin: 0;">
+                    <%= form.button value: "submit", class: "btn btn-primary", style:"margin-right: 10px;" do %>
+                        <span class="glyphicon glyphicon-send" aria-hidden="true"></span>
+                        <%= t('general.submit') %>
+                    <% end %>
+                    <%= form.button value: "cancel", class: "btn btn-danger", style:"margin-right: 10px;" do %>
+                        <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+                        <%= t('general.cancel_submission') %>
+                    <% end %>
+                    <!--<%= form.button value: "copy", class: "btn btn-default" do %>
+                        <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
+                        <%= t('general.copy') %>
+                    <% end %>-->
+                </div>
+            </div>
+        <% end %>
+
+    </div>
+</div>
+<script type="text/javascript">
+    $('.selectpicker').selectpicker('refresh');
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#recipient-selection').multiselect({ 
+            nonSelectedText: '<%= t("general.none_select") %>',
+            includeSelectAllOption: true,
+            numberDisplayed: 1,
+            selectAllText: '<%= t("general.select_all") %>',
+            nSelectedText: '<%= t("general.nselect") %>',
+            allSelectedText:  '<%= t("general.all_selected") %>'});
+        $('#purpose-selection').multiselect({ 
+            nonSelectedText: '<%= t("general.none_select") %>',
+            includeSelectAllOption: true,
+            numberDisplayed: 1,
+            selectAllText: '<%= t("general.select_all") %>',
+            nSelectedText: '<%= t("general.nselect") %>',
+            allSelectedText:  '<%= t("general.all_selected") %>'});
+        $('#processing-selection').multiselect({ 
+            nonSelectedText: '<%= t("general.none_select") %>',
+            includeSelectAllOption: true,
+            numberDisplayed: 1,
+            selectAllText: '<%= t("general.select_all") %>',
+            nSelectedText: '<%= t("general.nselect") %>',
+            allSelectedText:  '<%= t("general.all_selected") %>'});
+        $('#storage-location-selection').multiselect({ 
+            nonSelectedText: '<%= t("general.none_select") %>',
+            includeSelectAllOption: true,
+            numberDisplayed: 1,
+            selectAllText: '<%= t("general.select_all") %>',
+            nSelectedText: '<%= t("general.nselect") %>',
+            allSelectedText:  '<%= t("general.all_selected") %>'});
+        $('#storage-duration-selection').multiselect({ 
+            nonSelectedText: '<%= t("general.none_select") %>',
+            includeSelectAllOption: true,
+            numberDisplayed: 1,
+            selectAllText: '<%= t("general.select_all") %>',
+            nSelectedText: '<%= t("general.nselect") %>',
+            allSelectedText:  '<%= t("general.all_selected") %>'});
+    });
+</script>
+
+<script type="text/javascript">
+$(function () {
+  $('[data-toggle="popover"]').popover({ container: 'body' }).on("show.bs.popover", function(){ $(this).data("bs.popover").tip().css("max-width", "680px"); }).on('shown.bs.popover', function (eventShown) { var $popup = $('#' + $(eventShown.target).attr('aria-describedby')); $popup.find('.close').click(function (e) { $popup.popover('hide'); }); });
+});
+$('body').on('hidden.bs.popover', function (e) { $(e.target).data("bs.popover").inState.click = false; });
+</script>

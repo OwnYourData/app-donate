@@ -1,0 +1,10 @@
+web:
+  image: oydeu/oyd-donate
+  env_file: .env
+  environment:
+    RAILS_ENV: production
+    LETSENCRYPT_HOST: donate.ownyourdata.eu
+    VIRTUAL_HOST: donate.ownyourdata.eu
+  mem_limit: 256m
+  ports:
+    - "3000:3000"

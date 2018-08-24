@@ -1,0 +1,12 @@
+<%= link_to t('general.back'), "/" + I18n.locale.to_s + "/" %>
+<h2><%= @title %></h2>
+<%= @description %><br>
+<em>available at:</em> <%= @container %>
+<h4>Example Input Data</h4>
+<pre><%= JSON.pretty_generate(JSON.parse(@example.to_s.gsub("=>", ":"))) %></pre>
+<p>&nbsp;</p>
+<h4>SHACL Definition</h4>
+<p>read more about <a href="https://en.wikipedia.org/wiki/SHACL">SHACL on Wikipedia</a></p>
+<pre><%= JSON.pretty_generate(JSON.parse(@response.to_s.gsub("=>", ":"))) %></pre>
+
+<%= link_to t('general.back'), "/" + I18n.locale.to_s + "/" %>
