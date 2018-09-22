@@ -39,6 +39,8 @@ de:
     submit_to_info: "Folgende Daten werden versandt"
     records: "Anzahl der Datensätze"
     url: "Spenden-Adresse"
+    copyClipboard: "In die Zwischenablage kopieren"
+    clipboardCopied: "Kopiert!"
   usage:
     recipient:
       ours: "Wir selbst"

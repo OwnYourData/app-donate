@@ -39,6 +39,8 @@ en:
     submit_to_info: "The following data will be sent"
     records: "Number of records"
     url: "Donation address"
+    copyClipboard: "Copy to clipboard"
+    clipboardCopied: "Copied!"
   usage:
     recipient:
       ours: "Ourselves"

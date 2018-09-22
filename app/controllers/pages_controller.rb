@@ -1,5 +1,6 @@
 class PagesController < ApplicationController
 	include ApplicationHelper
+	require 'securerandom'
 
 	def valid_json?(json)
 	    JSON.parse(json)
@@ -43,7 +44,6 @@ class PagesController < ApplicationController
 	end
 
 	def submit
-
 		if params["button"] == "results"
 			redirect_to results_path(donation: params["scenario"])
 			return
@@ -60,7 +60,7 @@ class PagesController < ApplicationController
 			return
 		end
 
-		if params["button"] == "donate"
+		if ((params["button"] == "donate") or (params["button"] == "submit"))
 			scenario = params["scenario"]
 			data = params["json_data"]
 			email = params["email"].to_s
@@ -98,19 +98,44 @@ class PagesController < ApplicationController
 			@donation = Donation.find_by_name(scenario)
 			@donation_url = @donation.container +  "/api/data"
 
-			if params["check"].to_s == "0"
-				response = HTTParty.post(@donation_url,
-					headers: { 'Content-Type' => 'application/json' },
-			        body: data)
-
-				if response.code.to_s == "200"
-					flash[:success] = "Success"
+			# create/update record
+			if params["donation"].to_s != ""
+				@donation_uuid = params["donation"]
+				@dr = DonationRecord.find_by_key_id(@donation_uuid)
+				if @dr.nil?
+					@dr = DonationRecord.new(
+						donation_id: @donation.id,
+						key_id: SecureRandom.uuid,
+						submission: data,
+						email: email,
+						signature: signature,
+						diffpriv: diffpriv,
+						recipient: recipient,
+						purpose: purpose,
+						processing: processing,
+						min_participants: check_participants,
+						min_participants_number: num_participants,
+						storage_location: storage_location,
+						storage_duration: storage_duration)
+					@dr.save
 				else
-					flash[:warning] = "Error: " + response.parsed_response["error"]
-				end
+					@dr.update_attributes(
+						donation_id: @donation.id,
+						key_id: SecureRandom.uuid,
+						submission: data,
+						email: email,
+						signature: signature,
+						diffpriv: diffpriv,
+						recipient: recipient,
+						purpose: purpose,
+						processing: processing,
+						min_participants: check_participants,
+						min_participants_number: num_participants,
+						storage_location: storage_location,
+						storage_duration: storage_duration)
 
+				end
 			else
-				require 'securerandom'
 				@dr = DonationRecord.new(
 					donation_id: @donation.id,
 					key_id: SecureRandom.uuid,
@@ -126,13 +151,25 @@ class PagesController < ApplicationController
 					storage_location: storage_location,
 					storage_duration: storage_duration)
 				@dr.save
+			end
 
+			if params["check"].to_s == "0"
+				response = HTTParty.post(@donation_url,
+					headers: { 'Content-Type' => 'application/json' },
+			        body: create_submission(@dr, @donation.container +  "/api/desc"))
+
+				if response.code.to_s == "200"
+					flash[:success] = "Success, Donation ID: " + @dr.key_id.to_s
+				else
+					flash[:warning] = "Error: " + response.parsed_response["error"]
+				end
+				
+			else
 				redirect_to root_path(donation: @dr.key_id, anchor: "submit_data")
 				return
 			end
-		end
-
-		redirect_to root_path
+		end	
+		redirect_to root_path	
 	end
 
 	def results
