@@ -163,11 +163,15 @@ module ApplicationHelper
                 }.stringify_keys,
                 "date": {
                     "@id": "sc:date",
-                    "@type": "xsd:date"
+                    "@type": "xsd:dateTime"
                 }.stringify_keys,
                 "value": {
                     "@id": "sc:value",
-                    "@type": "xsd:integer"
+                    "@type": "xsd:double"
+                }.stringify_keys,
+                "person": {
+                    "@id": "sc:person",
+                    "@type": "xsd:string"
                 }.stringify_keys,
                 "email": {
                     "@id": "sc:email",
@@ -175,6 +179,10 @@ module ApplicationHelper
                 }.stringify_keys,
                 "signature": {
                     "@id": "sc:signature",
+                    "@type": "xsd:string"
+                }.stringify_keys,
+                "insulinType": {
+                    "@id": "sc:insulinType",
                     "@type": "xsd:string"
                 }.stringify_keys
             }.stringify_keys,

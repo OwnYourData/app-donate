@@ -26,6 +26,7 @@ class PagesController < ApplicationController
 			if !@dr.nil?
 				@donation = Donation.find(@dr.donation_id)
 				if !@donation.nil?
+					@scenario = @donation.name
 					@donation_url = @donation.container +  "/api/data"
 					@data = create_submission(@dr, @donation.container +  "/api/desc")
 				end

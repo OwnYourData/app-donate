@@ -21,7 +21,7 @@ en:
     privacy_info: "Configure how much you want to disclose from yourself and your data."
     usage_policy_info: "Configure here the allowed usage policy for the data you donate."
     usage_policy_reference: "The exact meaning of each attribute is described in this document: <a href='https://www.specialprivacy.eu/images/documents/SPECIAL_D2.1_M12_V1.0.pdf' target='_blank'>SPECIAL Policy Language V1</a>"
-    recipient: "recipient"
+    recipient: "Recipient"
     purpose: "Purpose"
     processing: "Processing"
     min_participants: "minimum number of participants"

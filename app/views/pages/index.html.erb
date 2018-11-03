@@ -13,7 +13,7 @@
         <%= form_with url: submit_path do |form| %>
             <%= form.hidden_field :donation, value: @donation_uuid %>
             <%= form.label :scenario, t('general.request') %><br>
-            <%= form.select :scenario, @donations, {}, { class: "selectpicker" } %><br>
+            <%= form.select :scenario, @donations, { selected: @scenario }, { class: "selectpicker" } %><br>
 
             <%= form.label :data, t('general.submission'), style: "margin-top: 15px;" %> 
                 (<%= form.button t('general.example'), value: "info", role: "link", class: "btn bnt-link", style: "background-color: white; padding: 0; color: #337ab7; margin-top: -3px; box-shadow: none;" %>)<br>
