@@ -12,7 +12,6 @@
   </head>
 
   <body>
-  <body>
     <div class="container">
       <div class="row">
         <div class="col-xs-2">
@@ -22,8 +21,8 @@
           <h1 style="text-align: center; margin-bottom: 30px;"><%= t('general.title') %></h1>
         </div>
         <div class="col-xs-2" style="white-space: nowrap; margin-top: 30px; text-align: right;">
-          <%= link_to_unless I18n.locale.to_s == "de", "DE", { locale: 'de' } %> | 
-          <%= link_to_unless I18n.locale.to_s == "en", "EN", { locale: 'en' } %>
+          <%= link_to_unless I18n.locale.to_s == "de", "DE", { locale: 'de', donation: params[:donation] } %> | 
+          <%= link_to_unless I18n.locale.to_s == "en", "EN", { locale: 'en', donation: params[:donation] } %>
         </div>
       </div>
       <%= yield %>

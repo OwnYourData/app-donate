@@ -1,5 +1,6 @@
 <%= link_to t('general.back'), "/" + I18n.locale.to_s + "/" %>
 <h2><%= t('general.result_title') %></h2>
+<p><%= t('general.update_interval_text') %></p>
 <pre><%= JSON.pretty_generate(JSON.parse(@output.to_s.gsub("=>", ":"))) %></pre>
 
 <%= link_to t('general.back'), "/" + I18n.locale.to_s + "/" %>

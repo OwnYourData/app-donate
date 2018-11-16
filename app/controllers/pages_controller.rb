@@ -176,9 +176,13 @@ class PagesController < ApplicationController
 	def results
 		@donation_name = params[:donation]
 		@donation = Donation.find_by_name(@donation_name)
-		@output = "[" +  HTTParty.get(Donation.first.container + "/api/data").parsed_response.each do |item|
-			JSON.pretty_generate(JSON.parse(item.to_s.gsub("=>", ":"))).to_s
-   		end.join(",") + "]"
+		begin
+			@output = "[" +  HTTParty.get(@donation.result).parsed_response.each do |item|
+				JSON.pretty_generate(JSON.parse(item.to_json)).to_s
+	   		end.join(",") + "]"
+	   	rescue
+	   		@output = "[]"
+	   	end
 	end
 
 	def info

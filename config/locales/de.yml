@@ -41,6 +41,7 @@ de:
     url: "Spenden-Adresse"
     copyClipboard: "In die Zwischenablage kopieren"
     clipboardCopied: "Kopiert!"
+    update_interval_text: "Die Ergebnisse werden zu jeder vollen Stunde aktualisiert."
   usage:
     recipient:
       ours: "Wir selbst"

@@ -41,6 +41,7 @@ en:
     url: "Donation address"
     copyClipboard: "Copy to clipboard"
     clipboardCopied: "Copied!"
+    update_interval_text: "Results will be updated every full hour."    
   usage:
     recipient:
       ours: "Ourselves"
